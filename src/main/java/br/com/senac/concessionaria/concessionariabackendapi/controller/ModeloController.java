@@ -70,4 +70,12 @@ public class ModeloController {
         });
         return ResponseEntity.ok().body(null);
     }
+    @GetMapping(path =  {"/{id}"})
+    public ResponseEntity<ModeloResponse> carregarModeloId(@PathVariable Long id){
+        Optional<Modelo> modelo = modeloRepository.findById(id);
+        ModeloResponse modeloResponse = new ModeloResponse();
+        modeloResponse.setId(modelo.get().getId());
+        modeloResponse.setNome(modelo.get().getNome());
+        return ResponseEntity.ok().body(modeloResponse);
+    }
 }

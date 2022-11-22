@@ -5,6 +5,10 @@ public class MarcaResponse {
     private String nome;
     private String descricao;
 
+    public MarcaResponse() {
+
+    }
+
     public Long getId() {
         return id;
     }

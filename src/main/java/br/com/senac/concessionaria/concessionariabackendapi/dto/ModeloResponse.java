@@ -4,6 +4,10 @@ public class ModeloResponse {
     private Long id;
     private String nome;
 
+    public ModeloResponse() {
+
+    }
+
     public Long getId() {
         return id;
     }

@@ -78,4 +78,16 @@ public class MarcaController {
         return ResponseEntity.ok().body(null);
     }
 
+    @GetMapping(path = {"/{id}"})
+    public ResponseEntity<MarcaResponse> carregarMarcaId(@PathVariable Long id){
+
+        Optional<Marca> marca = marcaRepository.findById(id);
+
+        MarcaResponse marcaResponse = new MarcaResponse();
+        marcaResponse.setId(marca.get().getId());
+        marcaResponse.setNome(marca.get().getNome());
+        marcaResponse.setDescricao(marca.get().getDescricao());
+
+        return ResponseEntity.ok().body(marcaResponse);
+    }
 }
