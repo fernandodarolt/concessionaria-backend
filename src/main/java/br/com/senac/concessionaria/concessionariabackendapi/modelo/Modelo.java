@@ -12,6 +12,14 @@ public class Modelo {
     @Column(nullable = false)
     private String nome;
 
+    @ManyToOne
+    @JoinColumn(name = "idMarca", nullable = false)
+    private Marca marca;
+
+    @ManyToOne
+    @JoinColumn(name = "idPlaca", nullable = false)
+    private Placa placa;
+
     public Long getId() {
         return id;
     }
@@ -26,5 +34,21 @@ public class Modelo {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Marca getMarca() {
+        return marca;
+    }
+
+    public void setMarca(Marca marca) {
+        this.marca = marca;
+    }
+
+    public Placa getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(Placa placa) {
+        this.placa = placa;
     }
 }
