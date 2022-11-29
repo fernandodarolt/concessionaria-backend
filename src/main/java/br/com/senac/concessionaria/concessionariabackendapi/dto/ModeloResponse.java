@@ -48,4 +48,9 @@ public class ModeloResponse {
         this.marca = marca;
         this.placa = placa;
     }
+
+    public ModeloResponse(Long id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
 }

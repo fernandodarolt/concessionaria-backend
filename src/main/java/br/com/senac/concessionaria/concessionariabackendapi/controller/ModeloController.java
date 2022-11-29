@@ -27,8 +27,6 @@ public class ModeloController {
     @Autowired
     private MarcaRepository marcaRepository;
 
-
-
     @CrossOrigin(origins = "*")
     @PostMapping
     public ResponseEntity<Void> criarModelo(@RequestBody ModeloRequest modeloRequest){

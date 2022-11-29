@@ -2,8 +2,11 @@ package br.com.senac.concessionaria.concessionariabackendapi.controller;
 
 import br.com.senac.concessionaria.concessionariabackendapi.dto.MarcaRequest;
 import br.com.senac.concessionaria.concessionariabackendapi.dto.MarcaResponse;
+import br.com.senac.concessionaria.concessionariabackendapi.dto.ModeloResponse;
 import br.com.senac.concessionaria.concessionariabackendapi.modelo.Marca;
+import br.com.senac.concessionaria.concessionariabackendapi.modelo.Modelo;
 import br.com.senac.concessionaria.concessionariabackendapi.repository.MarcaRepository;
+import br.com.senac.concessionaria.concessionariabackendapi.repository.ModeloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,9 @@ public class MarcaController {
     @Autowired
     private MarcaRepository marcaRepository;
 
+    @Autowired
+    private ModeloRepository modeloRepository;
+
     @CrossOrigin(origins = "*")
     @PostMapping
     public ResponseEntity<Void> criarMarca(@RequestBody MarcaRequest marca){
@@ -33,6 +39,7 @@ public class MarcaController {
         return ResponseEntity.ok().body(null);
     }
 
+    //Lista todas marcas
     @CrossOrigin(origins = "*")
     @GetMapping
     public ResponseEntity<List<MarcaResponse>> retornarMarcas(){
@@ -78,16 +85,50 @@ public class MarcaController {
         return ResponseEntity.ok().body(null);
     }
 
+    //Lista pelo ID
     @GetMapping(path = {"/{id}"})
     public ResponseEntity<MarcaResponse> carregarMarcaId(@PathVariable Long id){
-
         Optional<Marca> marca = marcaRepository.findById(id);
-
         MarcaResponse marcaResponse = new MarcaResponse();
         marcaResponse.setId(marca.get().getId());
         marcaResponse.setNome(marca.get().getNome());
         marcaResponse.setDescricao(marca.get().getDescricao());
-
         return ResponseEntity.ok().body(marcaResponse);
     }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping(path = {"/modelos"})
+    public ResponseEntity<List<MarcaResponse>> retornarMarcasModelo(){
+        List<Marca> marcaList = new ArrayList<>();
+        marcaList = marcaRepository.findAll();
+        List<MarcaResponse> marcaResponseList = new ArrayList<>();
+        for(Marca marca : marcaList){
+            List<Modelo> modeloList = modeloRepository.getModelos(marca.getId());
+            List<ModeloResponse> modeloResponses = new ArrayList<>();
+            for (Modelo modelo : modeloList){
+                modeloResponses.add(new ModeloResponse(modelo.getId(), modelo.getNome()));
+            }
+            marcaResponseList.add(new MarcaResponse(marca.getId(), marca.getNome(), marca.getDescricao(), modeloResponses));
+        }
+        return ResponseEntity.ok().body(marcaResponseList);
+    }
+    @CrossOrigin(origins = "*")
+    @GetMapping(path = {"/modelos/{id}"})
+    public ResponseEntity<List<MarcaResponse>> retornarMarcasModeloId(@PathVariable Long id){
+        Optional<Marca> marca = marcaRepository.findById(id);
+        MarcaResponse marcaResponse = new MarcaResponse();
+        marcaResponse.setId(marca.get().getId());
+        marcaResponse.setNome(marca.get().getNome());
+        marcaResponse.setDescricao(marca.get().getDescricao());
+        List<Modelo> modeloList = modeloRepository.getModelos(marcaResponse.getId());
+        List<ModeloResponse> modeloResponses = new ArrayList<>();
+        for (Modelo modelo : modeloList){
+            modeloResponses.add(new ModeloResponse(modelo.getId(), modelo.getNome()));
+        }
+        List<MarcaResponse> marcaResponseList = new ArrayList<>();
+        marcaResponseList.add(new MarcaResponse(marcaResponse.getId(), marcaResponse.getNome(), marcaResponse.getDescricao(), modeloResponses));
+        return ResponseEntity.ok().body(marcaResponseList);
+    }
+
+
 }
