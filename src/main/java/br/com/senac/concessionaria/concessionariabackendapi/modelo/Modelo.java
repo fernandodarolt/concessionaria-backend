@@ -51,4 +51,7 @@ public class Modelo {
     public void setPlaca(Placa placa) {
         this.placa = placa;
     }
+
+    public void setPlaca(Long idPlaca) {
+    }
 }

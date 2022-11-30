@@ -3,8 +3,10 @@ package br.com.senac.concessionaria.concessionariabackendapi.controller;
 import br.com.senac.concessionaria.concessionariabackendapi.dto.MarcaRequest;
 import br.com.senac.concessionaria.concessionariabackendapi.dto.MarcaResponse;
 import br.com.senac.concessionaria.concessionariabackendapi.dto.ModeloResponse;
+import br.com.senac.concessionaria.concessionariabackendapi.dto.PlacaResponse;
 import br.com.senac.concessionaria.concessionariabackendapi.modelo.Marca;
 import br.com.senac.concessionaria.concessionariabackendapi.modelo.Modelo;
+import br.com.senac.concessionaria.concessionariabackendapi.modelo.Placa;
 import br.com.senac.concessionaria.concessionariabackendapi.repository.MarcaRepository;
 import br.com.senac.concessionaria.concessionariabackendapi.repository.ModeloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +125,12 @@ public class MarcaController {
         List<Modelo> modeloList = modeloRepository.getModelos(marcaResponse.getId());
         List<ModeloResponse> modeloResponses = new ArrayList<>();
         for (Modelo modelo : modeloList){
-            modeloResponses.add(new ModeloResponse(modelo.getId(), modelo.getNome()));
+            Placa placaObj = modelo.getPlaca();
+            PlacaResponse placa = new PlacaResponse();
+            placa.setId(placaObj.getId());
+            placa.setNumero(placaObj.getNumero());
+            modeloResponses.add(new ModeloResponse(modelo.getId(), modelo.getNome(), placa));
+
         }
         List<MarcaResponse> marcaResponseList = new ArrayList<>();
         marcaResponseList.add(new MarcaResponse(marcaResponse.getId(), marcaResponse.getNome(), marcaResponse.getDescricao(), modeloResponses));

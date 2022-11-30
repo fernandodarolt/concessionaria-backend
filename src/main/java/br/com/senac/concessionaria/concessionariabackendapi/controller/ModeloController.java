@@ -9,6 +9,7 @@ import br.com.senac.concessionaria.concessionariabackendapi.modelo.Modelo;
 import br.com.senac.concessionaria.concessionariabackendapi.modelo.Placa;
 import br.com.senac.concessionaria.concessionariabackendapi.repository.MarcaRepository;
 import br.com.senac.concessionaria.concessionariabackendapi.repository.ModeloRepository;
+import br.com.senac.concessionaria.concessionariabackendapi.repository.PlacaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,13 +28,18 @@ public class ModeloController {
     @Autowired
     private MarcaRepository marcaRepository;
 
+    @Autowired
+    private PlacaRepository placaRepository;
+
     @CrossOrigin(origins = "*")
     @PostMapping
     public ResponseEntity<Void> criarModelo(@RequestBody ModeloRequest modeloRequest){
         Modelo modeloModel = new Modelo();
         Optional<Marca> marca = marcaRepository.findById(modeloRequest.getIdMarca());
+        Optional<Placa> placa = placaRepository.findById(modeloRequest.getIdPlaca());
         modeloModel.setNome(modeloRequest.getNome());
         modeloModel.setMarca(marca.get());
+        modeloModel.setPlaca(placa.get());
         try {
             modeloRepository.save(modeloModel);
             return ResponseEntity.ok().body(null);
@@ -51,14 +57,14 @@ public class ModeloController {
         List<ModeloResponse> modeloResponseList = new ArrayList<>();
         for (Modelo modelo : modeloList){
             Marca marca = modelo.getMarca();
-            MarcaResponse marcaResponse = new MarcaResponse();
             Placa placa = modelo.getPlaca();
-            PlacaResponse placaResponse = new PlacaResponse();
+            MarcaResponse marcaResponse = new MarcaResponse();
             if (marca != null){
                 marcaResponse.setId(marca.getId());
                 marcaResponse.setDescricao(marca.getDescricao());
                 marcaResponse.setNome(marca.getNome());
             }
+            PlacaResponse placaResponse = new PlacaResponse();
             if (placa != null){
                 placaResponse.setId(placa.getId());
                 placaResponse.setNumero(placa.getNumero());
